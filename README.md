@@ -28,6 +28,7 @@ The following **extensions** are implemented:
 Here's a walkthrough of implemented user stories:
 
 <blockquote class="imgur-embed-pub" lang="en" data-id="a/tN19hED"  ><a href="//imgur.com/a/tN19hED">MyMaps</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+https://imgur.com/a/tN19hED
 
 ## Notes
 
