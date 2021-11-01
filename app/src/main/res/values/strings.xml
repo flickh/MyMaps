@@ -2,4 +2,5 @@
     <string name="app_name">MyMaps</string>
     <string name="title_activity_display_map">DisplayMapActivity</string>
     <string name="title_activity_create_maps">CreateMapsActivity</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

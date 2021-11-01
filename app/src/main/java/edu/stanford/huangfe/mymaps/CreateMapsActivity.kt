@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -32,7 +33,7 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityCreateMapsBinding
     private var markers: MutableList<Marker> = mutableListOf()
     private var isSatellite = false;
-    private lateinit var fabChangeView: FloatingActionButton
+    private lateinit var fabChangeView: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityCreateMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //fabChangeView = findViewById(R.id.fabChangeView)
+        fabChangeView = findViewById(R.id.fabChangeView)
 
         supportActionBar?.title = intent.getStringExtra(EXTRA_MAP_TITLE)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -55,20 +56,16 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .setActionTextColor(ContextCompat.getColor(this, android.R.color.white))
                 .show()
         }
-
-        //fabChangeView.setOnClickListener {
-       //     changeMapView();
-        //}
     }
 
-    //private fun changeMapView() {
-    //    if(isSatellite) {
-    //        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
-    //    } else {
-    //        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL)
-    //        isSatellite = true;
-    //    }
-    //}
+    private fun changeMapView() {
+        if(isSatellite) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
+        } else {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL)
+            isSatellite = true;
+        }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_create_map, menu)
@@ -120,6 +117,10 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         //val sydney = LatLng(-34.0, 151.0)
         // mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(silVal, 5f))
+
+        fabChangeView.setOnClickListener {
+             changeMapView();
+        }
     }
 
     private fun showAlertDialog(latLng: LatLng) {
