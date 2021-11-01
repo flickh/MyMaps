@@ -5,9 +5,13 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.animation.BounceInterpolator
+import android.view.animation.Interpolator
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -41,7 +45,7 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityCreateMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        fabChangeView = findViewById(R.id.fabChangeView)
+        //fabChangeView = findViewById(R.id.fabChangeView)
 
         supportActionBar?.title = intent.getStringExtra(EXTRA_MAP_TITLE)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -58,14 +62,14 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun changeMapView() {
-        if(isSatellite) {
-            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
-        } else {
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL)
-            isSatellite = true;
-        }
-    }
+    //private fun changeMapView() {
+    //    if(isSatellite) {
+    //        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE)
+    //    } else {
+    //        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL)
+    //        isSatellite = true;
+    //    }
+    //}
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_create_map, menu)
@@ -118,9 +122,9 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(silVal, 5f))
 
-        fabChangeView.setOnClickListener {
-             changeMapView();
-        }
+        //fabChangeView.setOnClickListener {
+        //     changeMapView();
+        //}
     }
 
     private fun showAlertDialog(latLng: LatLng) {
@@ -141,9 +145,42 @@ class CreateMapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val marker = mMap.addMarker(MarkerOptions().position(latLng).title(title).snippet(description))
             markers.add(marker)
+            dropPinEffect(marker);
             dialog.dismiss()
         }
 
+    }
+
+    private fun dropPinEffect(marker: Marker) {
+        // Handler allows us to repeat a code block after a specified delay
+        val handler = Handler()
+        val start = SystemClock.uptimeMillis()
+        val duration: Long = 1500
+
+        // Use the bounce interpolator
+        val interpolator: Interpolator = BounceInterpolator()
+
+        // Animate marker with a bounce updating its position every 15ms
+        handler.post(object : Runnable {
+            override fun run() {
+                val elapsed = SystemClock.uptimeMillis() - start
+                // Calculate t for bounce based on elapsed time
+                val t = Math.max(
+                    1 - interpolator.getInterpolation(
+                        elapsed.toFloat()
+                                / duration
+                    ), 0f
+                )
+                // Set the anchor
+                marker.setAnchor(0.5f, 1.0f + 14 * t)
+                if (t > 0.0) {
+                    // Post this event again 15ms from now.
+                    handler.postDelayed(this, 15)
+                } else { // done elapsing, show window
+                    marker.showInfoWindow()
+                }
+            }
+        })
     }
 }
 
